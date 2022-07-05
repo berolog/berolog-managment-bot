@@ -5,7 +5,6 @@ from aiogram import Bot, Dispatcher, executor, types
 from datetime import date
 from buttons import inline_keyboard
 
-
 bot_token = '5162165790:AAHD_2v5tB5hntJY9S0Gy-mtnAIrFc--uSg'
 mono_token = 'u8PI0F5SA36yJrCPaWamBEGsTFjyrZWdkyRbIgYf_Ltk'
 
@@ -29,12 +28,12 @@ async def send_welcome(message: types.Message):
 #                        f"Баланс: {user_info['accounts'][1]['balance']/100}",
 #                        reply_markup=keyboard)
 
-#    await message.reply(f"Выписки: {statements}")
-#    keyboard = types.ReplyKeyboardMarkup()
-#    data = types.KeyboardButton(text='Лимит')
-#    keyboard.add(data)
+    await message.reply(f"Выписки: {statements}")
+    keyboard = types.ReplyKeyboardMarkup()
+    data = types.KeyboardButton(text='Лимит')
+    keyboard.add(data)
 
-    await message.reply('Ураа')
+    await message.reply('Ураа', reply_markup=keyboard)
 
 #@dp.message_handler()
 #async def echo(message: types.Message):
