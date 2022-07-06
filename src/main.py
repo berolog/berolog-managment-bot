@@ -30,10 +30,10 @@ dp = Dispatcher(bot)
 
 @dp.message_handler()
 async def echo(message: types.Message):
-#    await message.answer(message.text)
+    await message.answer(message.text)
 #    return SendMessage(chat_id=message.chat.id, text='Hi from webhook!',
 #                       reply_to_message_id=message.message_id)
-    await bot.get_webhook_info()
+#    await bot.get_webhook_info()
 
 
 async def on_startup(dispatcher):
@@ -45,7 +45,7 @@ async def on_shutdown(dispatcher):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
