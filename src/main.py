@@ -34,7 +34,7 @@ async def echo(message: types.Message):
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-    mono.create_webhook(WEBHOOK_URL)
+    await mono.create_webhook(WEBHOOK_URL)
 
 
 async def on_shutdown(dispatcher):
