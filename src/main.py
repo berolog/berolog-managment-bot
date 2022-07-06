@@ -30,8 +30,8 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=['start'])
 async def echo(message: types.Message):
-    #await message.answer(message.text)
-    await mono.create_webhook(WEBHOOK_URL)
+    await message.answer(message.text)
+#await mono.create_webhook(WEBHOOK_URL)
 
 
 async def on_startup(dispatcher):
