@@ -14,16 +14,16 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 
 # webhook settings
-WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.heroku.com'
+WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
 WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
+WEBHOOK_URL_MONO = f'https://{HEROKU_APP_NAME}.herokuapp.com{WEBHOOK_PATH}'
 
 # webserver settings
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
 mono = monobank.Client(MONO_TOKEN)
-#mono.create_webhook(WEBHOOK_URL)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
@@ -35,6 +35,7 @@ async def echo(message: types.Message):
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    await mono.create_webhook(WEBHOOK_URL_MONO)
 
 
 async def on_shutdown(dispatcher):
