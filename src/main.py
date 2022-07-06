@@ -22,7 +22,7 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
-#mono = monobank.Client(MONO_TOKEN)
+mono = monobank.Client(MONO_TOKEN)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
