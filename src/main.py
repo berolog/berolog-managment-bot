@@ -17,7 +17,7 @@ HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
 WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
-WEBHOOK_URL_MONO = f'https://{HEROKU_APP_NAME}.herokuapp.com{WEBHOOK_PATH}'
+WEBHOOK_URL_MONO = f'https://{HEROKU_APP_NAME}.heroku.com{WEBHOOK_PATH}'
 
 # webserver settings
 WEBAPP_HOST = '0.0.0.0'
