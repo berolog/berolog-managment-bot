@@ -22,7 +22,7 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
-mono = monobank.Client(MONO_TOKEN)
+#mono = monobank.Client(MONO_TOKEN)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
@@ -33,7 +33,7 @@ async def echo(message: types.Message):
 
 
 async def on_startup(dispatcher):
-    mono.create_webhook(WEBHOOK_URL)
+#    mono.create_webhook(WEBHOOK_URL)
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
 
 
