@@ -5,6 +5,7 @@ import logging
 import os
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
+from aiogram.dispatcher.webhook import SendMessage
 from aiogram import Bot, types
 import time
 
@@ -30,8 +31,8 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=['start'])
 async def echo(message: types.Message):
-    await message.answer(message.text)
-#await mono.create_webhook(WEBHOOK_URL)
+#    await message.answer(message.text)
+    return SendMessage(message.chat.id, message.text)
 
 
 async def on_startup(dispatcher):
