@@ -6,6 +6,7 @@ import os
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram import Bot, types
+import time
 
 
 MONO_TOKEN = os.getenv('MONO_TOKEN')
@@ -35,7 +36,8 @@ async def echo(message: types.Message):
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-#    await mono.create_webhook(WEBHOOK_URL_MONO)
+    time.sleep(10)
+    await mono.create_webhook(WEBHOOK_URL)
 
 
 async def on_shutdown(dispatcher):
