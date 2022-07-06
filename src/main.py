@@ -44,7 +44,6 @@ async def on_shutdown(dispatcher):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    aiogram.utils.executor.
     start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
