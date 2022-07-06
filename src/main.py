@@ -28,15 +28,14 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler()
+@dp.message_handler(commands=['start'])
 async def echo(message: types.Message):
-    await message.answer(message.text)
+    #await message.answer(message.text)
+    await mono.create_webhook(WEBHOOK_URL)
 
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-    time.sleep(10)
-#    await mono.create_webhook(WEBHOOK_URL)
 
 
 async def on_shutdown(dispatcher):
