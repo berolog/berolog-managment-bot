@@ -29,7 +29,7 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler(commands=['start'])
+@dp.message_handler()
 async def echo(message: types.Message):
 #    await message.answer(message.text)
     return SendMessage(message.chat.id, message.text)
