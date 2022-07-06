@@ -5,6 +5,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram import Bot, types
+import aiogram
 
 
 
@@ -34,7 +35,7 @@ async def echo(message: types.Message):
 
 
 async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=False)
 
 
 async def on_shutdown(dispatcher):
@@ -43,7 +44,7 @@ async def on_shutdown(dispatcher):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-
+    aiogram.utils.executor.
     start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
