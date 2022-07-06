@@ -31,11 +31,12 @@ dp = Dispatcher(bot)
 @dp.message_handler()
 async def echo(message: types.Message):
 #    await message.answer(message.text)
-    return SendMessage(message.chat.id, message.text)
+    return SendMessage(chat_id=message.chat.id, text='Hi from webhook!',
+                       reply_to_message_id=message.message_id)
 
 
 async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=False)
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
 
 
 async def on_shutdown(dispatcher):
