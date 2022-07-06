@@ -28,12 +28,9 @@ async def send_welcome(message: types.Message):
 #                        f"Баланс: {user_info['accounts'][1]['balance']/100}",
 #                        reply_markup=keyboard)
 
-    await message.reply(f"Выписки: {statements}")
-    keyboard = types.ReplyKeyboardMarkup()
-    data = types.KeyboardButton(text='Лимит')
-    keyboard.add(data)
 
-    await message.reply('Ураа', reply_markup=keyboard)
+    print(message)
+
 
 #@dp.message_handler()
 #async def echo(message: types.Message):
