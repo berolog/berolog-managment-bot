@@ -5,6 +5,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram import Bot, types
+from aiogram.
 import aiogram
 
 
@@ -31,8 +32,9 @@ dp = Dispatcher(bot)
 @dp.message_handler()
 async def echo(message: types.Message):
 #    await message.answer(message.text)
-    return SendMessage(chat_id=message.chat.id, text='Hi from webhook!',
-                       reply_to_message_id=message.message_id)
+#    return SendMessage(chat_id=message.chat.id, text='Hi from webhook!',
+#                       reply_to_message_id=message.message_id)
+    await bot.get_webhook_info()
 
 
 async def on_startup(dispatcher):
