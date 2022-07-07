@@ -19,6 +19,7 @@ async def cmd_start(message: types.Message):
 
 # handle /api route
 async def api_handler(request):
+    print(web.json_response)
     return web.json_response({"status": "OK"}, status=200)
 
 
