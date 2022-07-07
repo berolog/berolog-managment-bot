@@ -29,7 +29,6 @@ app.add_routes([web.post('/api', api_handler)])
 # as a bot update
 configure_app(dp, app, "/bot")
 
-mono.create_webhook('https://berolog-managment-bot.herokuapp.com/bot')
-
 if __name__ == '__main__':
     web.run_app(app, port=os.getenv('PORT', 9000))
+    mono.create_webhook('https://berolog-managment-bot.herokuapp.com/bot')
