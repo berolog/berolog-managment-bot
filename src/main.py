@@ -1,13 +1,13 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import configure_app
 from aiohttp import web
+import os
 
 
-API_TOKEN = "BOT_TOKEN_HERE"
+API_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
-
 
 
 @dp.message_handler(commands=["start"])
