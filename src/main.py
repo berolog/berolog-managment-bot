@@ -7,7 +7,7 @@ from aiogram.dispatcher.webhook import SendMessage
 from aiogram import Bot, types
 import aiogram
 
-MONO_TOKEN = os.getenv('MONO_TOKEN')
+#MONO_TOKEN = os.getenv('MONO_TOKEN')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
@@ -21,7 +21,7 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
-mono = monobank.Client(MONO_TOKEN)
+#mono = monobank.Client(MONO_TOKEN)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
