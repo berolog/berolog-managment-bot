@@ -2,7 +2,7 @@ import monobank
 import logging
 import os
 from aiogram.dispatcher import Dispatcher
-from aiogram.utils.executor import set_webhook
+from aiogram.utils.executor import start_webhook
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram.dispatcher.webhook import configure_app, WebhookRequestHandler, DEFAULT_ROUTE_NAME
 from aiogram import Bot, types
@@ -23,13 +23,10 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
-app = web.Application()
-app.router.add_route('*', WEBHOOK_PATH, WebhookRequestHandler, name='webhook_handler')
 
 mono = monobank.Client(MONO_TOKEN)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
-app['BOT_DISPATCHER'] = dp
 
 
 @dp.message_handler()
@@ -49,16 +46,12 @@ async def on_shutdown(dispatcher):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    executor = set_webhook(dispatcher=dp,
-                           webhook_path=WEBHOOK_PATH,
-                           loop=None,
-                           skip_updates=True,
-                           on_startup=on_startup,
-                           on_shutdown=on_shutdown,
-                           check_ip=False,
-                           retry_after=None,
-                           route_name=DEFAULT_ROUTE_NAME,
-                           web_app=app)
-    executor.run_app()
-
-    mono.create_webhook(WEBHOOK_URL)
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=True,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )
