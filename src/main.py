@@ -5,14 +5,17 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram.dispatcher.webhook import SendMessage
 from aiogram import Bot, types
-import aiogram
+from flask import Flask, request, abort
 
-#MONO_TOKEN = os.getenv('MONO_TOKEN')
+
+app = Flask(__name__)
+
+
+MONO_TOKEN = os.getenv('MONO_TOKEN')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 
-# webhook settings
 WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
 WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
 WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
@@ -21,7 +24,7 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
-#mono = monobank.Client(MONO_TOKEN)
+mono = monobank.Client(MONO_TOKEN)
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
@@ -42,8 +45,19 @@ async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
+@app.route('/' + WEBHOOK_PATH, methods=['POST'])
+def webhook():
+    if request.method == 'POST':
+        ##if request.json['data']['account'] == '7dxOnvxACiayZfZzNvs6fA':
+        print(request.json)
+        return 'success', 200
+    else:
+        abort(400)
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
+    app.run(host=WEBAPP_HOST, port=WEBAPP_PORT)
     start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
@@ -54,4 +68,4 @@ if __name__ == '__main__':
         port=WEBAPP_PORT,
     )
 
-#    mono.create_webhook(WEBHOOK_URL)
+    mono.create_webhook(WEBHOOK_URL)
