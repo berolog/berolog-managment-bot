@@ -1,59 +1,32 @@
-import monobank
-import logging
-import os
-from aiogram.dispatcher import Dispatcher
-from aiogram.utils.executor import start_webhook
-from aiogram.dispatcher.webhook import SendMessage
-from aiogram import Bot, types
-import aiogram
+from aiogram import Bot, Dispatcher, types
+from aiogram.dispatcher.webhook import configure_app
+from aiohttp import web
 
 
+API_TOKEN = "BOT_TOKEN_HERE"
 
-MONO_TOKEN = os.getenv('MONO_TOKEN')
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-
-HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
-
-# webhook settings
-WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
-WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
-WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
-
-# webserver settings
-WEBAPP_HOST = '0.0.0.0'
-WEBAPP_PORT = os.getenv('PORT', default=8000)
-
-mono = monobank.Client(MONO_TOKEN)
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler()
-async def echo(message: types.Message):
-    await message.answer(message.text)
-#    return SendMessage(chat_id=message.chat.id, text='Hi from webhook!',
-#                       reply_to_message_id=message.message_id)
-#    await bot.get_webhook_info()
+
+@dp.message_handler(commands=["start"])
+async def cmd_start(message: types.Message):
+    await message.reply("start!")
 
 
-async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+# handle /api route
+async def api_handler(request):
+    return web.json_response({"status": "OK"}, status=200)
 
 
-async def on_shutdown(dispatcher):
-    await bot.delete_webhook()
+app = web.Application()
+# add a custom route
+app.add_routes([web.post('/api', api_handler)])
+# every request to /bot route will be retransmitted to dispatcher to be handled
+# as a bot update
+configure_app(dp, app, "/bot")
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    start_webhook(
-        dispatcher=dp,
-        webhook_path=WEBHOOK_PATH,
-        skip_updates=True,
-        on_startup=on_startup,
-        on_shutdown=on_shutdown,
-        host=WEBAPP_HOST,
-        port=WEBAPP_PORT,
-    )
-
-    mono.create_webhook(WEBHOOK_URL)
+    web.run_app(app, port=9000)
