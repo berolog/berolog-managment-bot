@@ -54,4 +54,4 @@ if __name__ == '__main__':
         port=WEBAPP_PORT,
     )
 
-    mono.create_webhook(WEBHOOK_URL)
+#    mono.create_webhook(WEBHOOK_URL)
