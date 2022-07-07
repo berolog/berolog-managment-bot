@@ -2,6 +2,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.dispatcher.webhook import configure_app
 from aiohttp import web
 import os
+import logging
 
 
 API_TOKEN = os.getenv('BOT_TOKEN')
@@ -29,4 +30,5 @@ configure_app(dp, app, "/bot")
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     web.run_app(app, port=8000)
