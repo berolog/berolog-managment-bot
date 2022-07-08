@@ -8,6 +8,15 @@ def read_json():
     return json_object
 
 
-def write_json(dictionary):
-    with open("sample.json", "w") as outfile:
-        json.dump(dictionary, outfile)
+def write_json(data):
+    with open("config.json", "w") as outfile:
+        json.dump(data, outfile, indent=4)
+
+
+def set_limit(limit):
+    data = read_json()
+    data['limit'] = limit
+    write_json(data)
+
+
+

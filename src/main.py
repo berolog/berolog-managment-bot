@@ -5,6 +5,7 @@ import logging
 import os
 import json
 import monobank
+import rw_json
 
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -30,8 +31,14 @@ async def cmd_start(message: types.Message):
 
 @dp.message_handler(commands=['limit'])
 async def cmd_limit(message: types.Message):
-    print(message.text)
-    print(message.text.split()[1])
+    try:
+        rw_json.set_limit(message.text.split()[1])
+        limit = rw_json.read_json()['limit']
+        await message.reply(f"Лимит установлен!\n"
+                            f"Ваш лимит: {limit} грн")
+
+    except IndexError:
+        print('Не хватает аргументов')
 
 
 async def on_startup(dispatcher):
