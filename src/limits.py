@@ -10,7 +10,7 @@ def set_limit(limit):
 
 
 def get_limit():
-    data = data = rw_json.read_json()
+    data = rw_json.read_json()
     limit = data['limit']
 
     return limit

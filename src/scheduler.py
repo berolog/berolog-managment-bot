@@ -21,5 +21,5 @@ async def scheduler():
 
 
 # Создание планировщика
-async def on_startup(_):
+async def on_startup():
     asyncio.create_task(scheduler())
