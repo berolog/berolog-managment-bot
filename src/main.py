@@ -74,5 +74,5 @@ if __name__ == '__main__':
                            on_shutdown=on_shutdown,
                            route_name='bot',
                            web_app=app)
-    executor.run_app(port=os.getenv('PORT', 9000))
+    executor.run_app(host='0.0.0.0', port=os.getenv('PORT', 9000))
 
