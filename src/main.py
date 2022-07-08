@@ -1,11 +1,10 @@
 from aiogram import Bot, Dispatcher, types
-from aiogram.dispatcher.webhook import configure_app
 from aiogram.utils.executor import set_webhook
 from aiohttp import web
 import logging
 import os
 import json
-import mono
+import monobank
 
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -19,18 +18,19 @@ MONO_WEBHOOK_PATH = f"/mono/{MONO_TOKEN}"
 MONO_WEBHOOK_URL = f"{WEBHOOK_HOST}{MONO_WEBHOOK_PATH}"
 
 
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
+mono = monobank.Client(MONO_TOKEN)
 
 
 @dp.message_handler(commands=["start"])
 async def cmd_start(message: types.Message):
-    await message.reply("Класс, молодец1")
+    await message.answer("Куку")
 
 
-@dp.message_handler(commands=["mono"])
-async def cmd_mono(message: types.Message):
-    await mono.set_webhook(MONO_WEBHOOK_URL)
+@dp.message_handler(commands=['limit'])
+async def cmd_limit(message: types.Message):
+    print(message)
 
 
 async def on_startup(dispatcher):
