@@ -5,7 +5,7 @@ import mono
 
 
 async def autolimit_daily():
-    await limits.autolimit(mono.get_balance())
+    limits.autolimit(mono.get_balance())
 
 
 # Запуск планировщика
