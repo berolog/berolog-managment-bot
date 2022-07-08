@@ -13,8 +13,3 @@ def write_json(data):
         json.dump(data, outfile, indent=4)
 
 
-def set_limit(limit):
-    data = read_json()
-    data['limit'] = limit
-    write_json(data)
-
