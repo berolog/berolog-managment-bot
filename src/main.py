@@ -26,6 +26,10 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=["start"])
 async def cmd_start(message: types.Message):
     await message.answer("Куку")
+    try:
+        mono.mono.create_webhook(MONO_WEBHOOK_URL)
+    except Exception:
+        print('error')
 
 
 @dp.message_handler(commands=['limit'])
