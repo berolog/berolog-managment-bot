@@ -62,7 +62,7 @@ async def monobank(request):
 
 app = web.Application()
 app.add_routes([web.route('*', MONO_WEBHOOK_PATH, monobank)])
-configure_app(dp, app, BOT_WEBHOOK_PATH)
+#configure_app(dp, app, BOT_WEBHOOK_PATH)
 
 
 if __name__ == '__main__':
