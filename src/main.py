@@ -55,7 +55,7 @@ async def cmd_autolimit(message: types.Message):
 async def on_startup(dispatcher):
     await bot.set_webhook(BOT_WEBHOOK_URL, drop_pending_updates=True)
     await scheduler.on_startup()
-    await limits.autolimit(mono.get_balance())
+    limits.autolimit(mono.get_balance())
 
 
 async def on_shutdown(dispatcher):
