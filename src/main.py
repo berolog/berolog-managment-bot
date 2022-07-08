@@ -74,8 +74,8 @@ async def monobank(request):
                 amount = data['data']['statementItem']['amount']/100
                 balance = data['data']['statementItem']['balance']/100
                 limit = limits.get_limit()
-                if amount[0] == '-':
-                    limit -= amount[1:]
+                if amount < 0:
+                    limit = limit - (amount * -1)
                     print(limit)
 
                 await bot.send_message(chat_id=389471081, text=f"------------ Выписка ------------\n\n"
