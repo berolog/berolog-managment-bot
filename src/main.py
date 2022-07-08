@@ -4,24 +4,23 @@ from aiohttp import web
 import logging
 import os
 import json
-import monobank
+import mono
 import limits
+import scheduler
 
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
-MONO_TOKEN = os.getenv('MONO_TOKEN')
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 WEBHOOK_HOST = f"https://{HEROKU_APP_NAME}.herokuapp.com"
 BOT_WEBHOOK_PATH = f"/bot/{BOT_TOKEN}"
 BOT_WEBHOOK_URL = f"{WEBHOOK_HOST}{BOT_WEBHOOK_PATH}"
-MONO_WEBHOOK_PATH = f"/mono/{MONO_TOKEN}"
+MONO_WEBHOOK_PATH = f"/mono/{mono.MONO_TOKEN}"
 MONO_WEBHOOK_URL = f"{WEBHOOK_HOST}{MONO_WEBHOOK_PATH}"
 
 
 bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
-mono = monobank.Client(MONO_TOKEN)
 
 
 @dp.message_handler(commands=["start"])
@@ -43,14 +42,11 @@ async def cmd_limit(message: types.Message):
 @dp.message_handler(commands=['autolimit'])
 async def cmd_autolimit(message: types.Message):
     try:
-        accounts = mono.get_client_info()['accounts']
-        for account in accounts:
-            if account['id'] == os.getenv('MONO_ACCOUNT'):
-                balance = int(account['balance']/100)
-                limit = limits.autolimit(balance)
+        balance = mono.get_balance()
+        limit = limits.autolimit(balance)
 
-                await message.reply(f"Лимит установлен!\n"
-                                    f"Ваш лимит: {limit} грн")
+        await message.reply(f"Лимит установлен!\n"
+                            f"Ваш лимит: {limit} грн")
 
     except Exception:
         print("Ашибка")
@@ -58,6 +54,7 @@ async def cmd_autolimit(message: types.Message):
 
 async def on_startup(dispatcher):
     await bot.set_webhook(BOT_WEBHOOK_URL, drop_pending_updates=True)
+    await scheduler.on_startup()
 
 
 async def on_shutdown(dispatcher):
@@ -94,7 +91,6 @@ async def monobank(request):
 
 app = web.Application()
 app.add_routes([web.route('*', MONO_WEBHOOK_PATH, monobank)])
-#configure_app(dp, app, BOT_WEBHOOK_PATH)
 
 
 if __name__ == '__main__':
