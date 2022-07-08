@@ -1,27 +1,22 @@
-import monobank
+from aiogram import Bot, Dispatcher, types
+from aiogram.dispatcher.webhook import configure_app
+from aiogram.utils.executor import set_webhook
+from aiohttp import web
 import logging
 import os
-from aiogram.dispatcher import Dispatcher
-from aiogram.utils.executor import start_webhook
-from aiogram.dispatcher.webhook import SendMessage
-from aiogram.dispatcher.webhook import configure_app, WebhookRequestHandler, DEFAULT_ROUTE_NAME
-from aiogram import Bot, types
-from aiohttp import web
+import monobank
+import json
 
 
-MONO_TOKEN = os.getenv('MONO_TOKEN')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
+MONO_TOKEN = os.getenv('MONO_TOKEN')
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
-
-# webhook settings
-WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
-WEBHOOK_PATH = f'/webhook/{BOT_TOKEN}'
-WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
-
-# webserver settings
-WEBAPP_HOST = '0.0.0.0'
-WEBAPP_PORT = os.getenv('PORT', default=8000)
+WEBHOOK_HOST = f"https://{HEROKU_APP_NAME}/herokuapp.com"
+BOT_WEBHOOK_PATH = f"/bot/{BOT_TOKEN}"
+BOT_WEBHOOK_URL = f"{WEBHOOK_HOST}{BOT_WEBHOOK_PATH}"
+MONO_WEBHOOK_PATH = f"/mono/{MONO_TOKEN}"
+MONO_WEBHOOK_URL = f"{WEBHOOK_HOST}{MONO_WEBHOOK_PATH}"
 
 
 mono = monobank.Client(MONO_TOKEN)
@@ -29,29 +24,55 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
 
-@dp.message_handler()
-async def echo(message: types.Message):
-    return SendMessage(chat_id=message.chat.id, text='Hi from webhook!',
-                       reply_to_message_id=message.message_id)
-#    await bot.get_webhook_info()
+@dp.message_handler(commands=["start"])
+async def cmd_start(message: types.Message):
+    await mono.create_webhook(MONO_WEBHOOK_URL)
 
 
 async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    await bot.set_webhook(BOT_WEBHOOK_URL, drop_pending_updates=True)
 
 
 async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
+async def monobank(request):
+    if request.method == 'POST':
+        try:
+            data = await request.json()
+            account = data['data']['account']
+            if account == os.getenv('MONO_ACCOUNT'):
+                description = data['data']['statementItem']['description']
+                amount = data['data']['statementItem']['amount']/100
+                balance = data['data']['statementItem']['balance']/100
+
+                await bot.send_message(chat_id=389471081, text=f"------------ Выписка ------------\n\n"
+                                                               f"Описание: {description}\n"
+                                                               f"Сумма: {int(amount)} грн\n"
+                                                               f"Баланс: {balance} грн")
+        except json.decoder.JSONDecodeError:
+            print('No POST data')
+
+    else:
+        print('just get request')
+
+    return web.json_response({"status": "OK"}, status=200)
+
+
+app = web.Application()
+app.add_routes([web.route('*', MONO_WEBHOOK_PATH, monobank)])
+configure_app(dp, app, BOT_WEBHOOK_PATH)
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    start_webhook(
-        dispatcher=dp,
-        webhook_path=WEBHOOK_PATH,
-        on_startup=on_startup,
-        on_shutdown=on_shutdown,
-        skip_updates=True,
-        host=WEBAPP_HOST,
-        port=WEBAPP_PORT,
-    )
+    executor = set_webhook(dispatcher=dp,
+                           webhook_path=BOT_WEBHOOK_PATH,
+                           skip_updates=True,
+                           on_startup=on_startup,
+                           on_shutdown=on_shutdown,
+                           route_name='bot',
+                           web_app=app)
+    executor.run_app(port=os.getenv('PORT', 9000))
+
