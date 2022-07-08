@@ -12,14 +12,11 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 MONO_TOKEN = os.getenv('MONO_TOKEN')
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
-WEBHOOK_HOST = f"https://{HEROKU_APP_NAME}/herokuapp.com"
+WEBHOOK_HOST = f"https://{HEROKU_APP_NAME}.herokuapp.com"
 BOT_WEBHOOK_PATH = f"/bot/{BOT_TOKEN}"
 BOT_WEBHOOK_URL = f"{WEBHOOK_HOST}{BOT_WEBHOOK_PATH}"
 MONO_WEBHOOK_PATH = f"/mono/{MONO_TOKEN}"
 MONO_WEBHOOK_URL = f"{WEBHOOK_HOST}{MONO_WEBHOOK_PATH}"
-
-print(MONO_WEBHOOK_URL)
-print(BOT_WEBHOOK_URL)
 
 mono = monobank.Client(MONO_TOKEN)
 bot = Bot(token=BOT_TOKEN)
