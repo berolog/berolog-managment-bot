@@ -25,6 +25,11 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=["start"])
 async def cmd_start(message: types.Message):
+    await message.reply("Класс, молодец1")
+
+
+@dp.message_handler(commands=["mono"])
+async def cmd_mono(message: types.Message):
     await mono.create_webhook(MONO_WEBHOOK_URL)
 
 
