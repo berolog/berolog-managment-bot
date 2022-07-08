@@ -30,7 +30,8 @@ async def cmd_start(message: types.Message):
 
 @dp.message_handler(commands=['limit'])
 async def cmd_limit(message: types.Message):
-    print(message)
+    print(message.text)
+    print(message.text[1])
 
 
 async def on_startup(dispatcher):
