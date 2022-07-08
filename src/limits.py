@@ -9,6 +9,12 @@ def set_limit(limit):
     rw_json.write_json(data)
 
 
+def get_limit():
+    data = data = rw_json.read_json()
+    limit = data['limit']
+
+    return limit
+
 def autolimit(balance):
     month = date.today().month
     year = date.today().year
