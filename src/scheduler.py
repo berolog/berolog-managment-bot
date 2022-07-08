@@ -5,13 +5,13 @@ import mono
 
 
 async def autolimit_daily():
-    limits.autolimit(mono.get_balance())
+    await limits.autolimit(mono.get_balance())
 
 
 # Запуск планировщика
 async def scheduler():
 #    try:
-    aioschedule.every().day.at("23:00").do(autolimit_daily())
+    aioschedule.every().day.at("23:00").do(autolimit_daily)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
